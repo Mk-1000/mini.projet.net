@@ -9,6 +9,8 @@ namespace mini.project.Models
         public string NomClasse { get; set; }
         public int CodeGroupe { get; set; }
         public int CodeDepartement { get; set; }
+        public int CodeMatiere { get; set; }
+
 
         // Navigation properties
         public Departement Departement { get; set; }
