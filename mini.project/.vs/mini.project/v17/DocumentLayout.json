@@ -1,7 +1,68 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\mydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\mydbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_etudiant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_etudiant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_enseignant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_enseignant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_grade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_grade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_departement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_departement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_ligneficheabsence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_ligneficheabsence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_ficheabsenceseance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_ficheabsenceseance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_ficheabsence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_ficheabsence.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_groupe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_groupe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_seance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_seance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_matiere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_matiere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|c:\\users\\administrator\\documents\\github\\mini.projet.net-\\mini.project\\mini.project\\models\\t_classe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{63A9B0BF-08D0-4EE9-96D8-28FCB6753C51}|mini.project\\mini.project.csproj|solutionrelative:mini.project\\models\\t_classe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +70,206 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "mini.project\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\appsettings.Development.json",
+              "RelativeToolTip": "mini.project\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-12-12T10:30:41.845Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Program.cs",
+              "RelativeDocumentMoniker": "mini.project\\Program.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Program.cs",
+              "RelativeToolTip": "mini.project\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:29:58.745Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\appsettings.json",
+              "RelativeDocumentMoniker": "mini.project\\appsettings.json",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\appsettings.json",
+              "RelativeToolTip": "mini.project\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-12-12T10:29:58.22Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "T_Enseignant.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Enseignant.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Enseignant.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Enseignant.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Enseignant.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:29:10.052Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "T_Etudiant.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Etudiant.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Etudiant.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Etudiant.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Etudiant.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:29:09.449Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "T_Grade.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Grade.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Grade.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Grade.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Grade.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:29:03.541Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "T_Departement.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Departement.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Departement.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Departement.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Departement.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:28:59.084Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "T_LigneFicheAbsence.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_LigneFicheAbsence.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_LigneFicheAbsence.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_LigneFicheAbsence.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_LigneFicheAbsence.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:28:54.317Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "T_FicheAbsenceSeance.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_FicheAbsenceSeance.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_FicheAbsenceSeance.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_FicheAbsenceSeance.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_FicheAbsenceSeance.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:28:35.396Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MyDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\MyDbContext.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\MyDbContext.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\MyDbContext.cs",
+              "RelativeToolTip": "mini.project\\Models\\MyDbContext.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:25:24.723Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "T_FicheAbsence.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_FicheAbsence.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_FicheAbsence.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_FicheAbsence.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_FicheAbsence.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:28:30.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "T_Groupe.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Groupe.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Groupe.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Groupe.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Groupe.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:28:21.829Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "T_Seance.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Seance.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Seance.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Seance.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Seance.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:28:16.616Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "T_Matiere.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Matiere.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Matiere.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Matiere.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Matiere.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAxwA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:28:06.693Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "T_Classe.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Classe.cs",
+              "RelativeDocumentMoniker": "mini.project\\Models\\T_Classe.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\GitHub\\mini.projet.net-\\mini.project\\mini.project\\Models\\T_Classe.cs",
+              "RelativeToolTip": "mini.project\\Models\\T_Classe.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAYwBMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-12T10:27:55.568Z",
+              "EditorCaption": ""
             }
           ]
         },
