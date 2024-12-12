@@ -1,13 +1,13 @@
 @startuml
 
-class T_Classe {
+class Classe {
   + CodeClasse: int
   + NomClasse: string
   + CodeGroupe: int
   + CodeDepartement: int
 }
 
-class T_Matiere {
+class Matiere {
   + CodeMatiere: int
   + NomMatiere: string
   + NbreHeureCoursParSemaine: int
@@ -15,19 +15,19 @@ class T_Matiere {
   + NbreHeureTPParSemaine: int
 }
 
-class T_Seance {
+class Seance {
   + CodeSeance: int
   + NomSeance: string
   + HeureDebut: Time
   + HeureFin: Time
 }
 
-class T_Groupe {
+class Groupe {
   + CodeGroupe: int
   + NomGroupe: string
 }
 
-class T_FicheAbsence {
+class FicheAbsence {
   + CodeFicheAbsence: int
   + DateJour: Date
   + CodeMatiere: int
@@ -35,27 +35,27 @@ class T_FicheAbsence {
   + CodeClasse: int
 }
 
-class T_FicheAbsenceSeance {
+class FicheAbsenceSeance {
   + CodeFicheAbsence: int
   + CodeSeance: int
 }
 
-class T_LigneFicheAbsence {
+class LigneFicheAbsence {
   + CodeFicheAbsence: int
   + CodeEtudiant: int
 }
 
-class T_Departement {
+class Departement {
   + CodeDepartement: int
   + NomDepartement: string
 }
 
-class T_Grade {
+class Grade {
   + CodeGrade: int
   + NomGrade: string
 }
 
-class T_Enseignant {
+class Enseignant {
   + CodeEnseignant: int
   + Nom: string
   + Prenom: string
@@ -67,7 +67,7 @@ class T_Enseignant {
   + CodeGrade: int
 }
 
-class T_Etudiant {
+class Etudiant {
   + CodeEtudiant: int
   + Nom: string
   + Prenom: string
@@ -79,17 +79,16 @@ class T_Etudiant {
   + Tel: string
 }
 
-T_Departement "1" -- "0..*" T_Classe : manages
-T_Departement "1" -- "0..*" T_Enseignant : employs
-' T_Classe "1" -- "0..*" T_Etudiant : contains
-T_Classe "1" -- "0..*" T_Groupe : assigned to
-T_FicheAbsence "1" -- "0..*" T_FicheAbsenceSeance : includes
-T_FicheAbsence "1" -- "0..*" T_LigneFicheAbsence : con  tains
-T_FicheAbsence "0..*" -- "1" T_Classe : concerns
-T_FicheAbsence "0..*" -- "1" T_Matiere : for
-T_FicheAbsence "0..*" -- "1" T_Enseignant : recorded by
-T_FicheAbsenceSeance "0..*" -- "1" T_Seance : scheduled for
-T_LigneFicheAbsence "0..*" -- "1" T_Etudiant : relates to
-T_Enseignant "0..*" -- "1" T_Grade : has
+Departement "1" -- "0..*" Classe : manages
+Departement "1" -- "0..*" Enseignant : employs
+Classe "1" -- "0..*" Groupe : assigned to
+FicheAbsence "1" -- "0..*" FicheAbsenceSeance : includes
+FicheAbsence "1" -- "0..*" LigneFicheAbsence : con  tains
+FicheAbsence "0..*" -- "1" Classe : concerns
+FicheAbsence "0..*" -- "1" Matiere : for
+FicheAbsence "0..*" -- "1" Enseignant : recorded by
+FicheAbsenceSeance "0..*" -- "1" Seance : scheduled for
+LigneFicheAbsence "0..*" -- "1" Etudiant : relates to
+Enseignant "0..*" -- "1" Grade : has
 
 @enduml
