@@ -1,0 +1,115 @@
+﻿<h1>@ViewData["Title"]</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Add New Matiere</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="form-row">
+                <!-- Form fields for Matiere properties in the same row -->
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="NomMatiere">Nom Matiere</label>
+                    <input type="text" class="form-control" id="NomMatiere" name="NomMatiere" required />
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="NbreHeureCoursParSemaine">Heure Cours Par Semaine</label>
+                    <input type="number" class="form-control" id="NbreHeureCoursParSemaine" name="NbreHeureCoursParSemaine" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="NbreHeureTDParSemaine">Heure TD Par Semaine</label>
+                    <input type="number" class="form-control" id="NbreHeureTDParSemaine" name="NbreHeureTDParSemaine" required />
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="NbreHeureTPParSemaine">Heure TP Par Semaine</label>
+                    <input type="number" class="form-control" id="NbreHeureTPParSemaine" name="NbreHeureTPParSemaine" required />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Matiere</button>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- Matiere List -->
+<h2>Matieres List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Code Matiere</th>
+            <th>Nom Matiere</th>
+            <th>Heure Cours</th>
+            <th>Heure TD</th>
+            <th>Heure TP</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var matiere in Model)
+        {
+            <tr>
+                <td>@matiere.CodeMatiere</td>
+                <td>@matiere.NomMatiere</td>
+                <td>@matiere.NbreHeureCoursParSemaine</td>
+                <td>@matiere.NbreHeureTDParSemaine</td>
+                <td>@matiere.NbreHeureTPParSemaine</td>
+                <td>
+                    <!-- Edit Matiere Modal Trigger -->
+                    <button class="btn btn-warning" data-toggle="modal" data-target="#editModal-@matiere.CodeMatiere">Edit</button>
+
+                    <!-- Delete Matiere Form -->
+                    <form action="@Url.Action("Delete", "Matiere", new { id = matiere.CodeMatiere })" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- Edit Matiere Modal -->
+            <div class="modal fade" id="editModal-@matiere.CodeMatiere" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-@matiere.CodeMatiere" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel-@matiere.CodeMatiere">Edit Matiere</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form asp-action="Edit" method="post">
+                            <div class="modal-body">
+                                <input type="hidden" name="CodeMatiere" value="@matiere.CodeMatiere" />
+                                <div class="form-group">
+                                    <label for="NomMatiere">Nom Matiere</label>
+                                    <input type="text" class="form-control" id="NomMatiere" name="NomMatiere" value="@matiere.NomMatiere" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="NbreHeureCoursParSemaine">Heure Cours Par Semaine</label>
+                                    <input type="number" class="form-control" id="NbreHeureCoursParSemaine" name="NbreHeureCoursParSemaine" value="@matiere.NbreHeureCoursParSemaine" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="NbreHeureTDParSemaine">Heure TD Par Semaine</label>
+                                    <input type="number" class="form-control" id="NbreHeureTDParSemaine" name="NbreHeureTDParSemaine" value="@matiere.NbreHeureTDParSemaine" required />
+                                </div>
+                                <div class="form-group">
+                                    <label for="NbreHeureTPParSemaine">Heure TP Par Semaine</label>
+                                    <input type="number" class="form-control" id="NbreHeureTPParSemaine" name="NbreHeureTPParSemaine" value="@matiere.NbreHeureTPParSemaine" required />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>

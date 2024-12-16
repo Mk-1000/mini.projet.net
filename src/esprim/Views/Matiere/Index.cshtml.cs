@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace esprim.Views.FicheAbsence
+namespace esprim.Views.Matiere
 {
-    public class MarkAbsenceModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {

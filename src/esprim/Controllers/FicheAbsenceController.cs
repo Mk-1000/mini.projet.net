@@ -1,69 +1,72 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-public class FicheAbsenceController : Controller
+namespace esprim.Controllers
 {
-    private readonly MyDbContext _context;
-
-    public FicheAbsenceController(MyDbContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class FicheAbsenceController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly MyDbContext _context;
 
-    // Action to show the form for marking absence
-    public IActionResult MarkAbsence(int classeId)
-    {
-        var classe = _context.Classes
-                             .Include(c => c.Etudiants)
-                             .FirstOrDefault(c => c.CodeClasse == classeId);
-
-        if (classe == null)
+        public FicheAbsenceController(MyDbContext context)
         {
-            return NotFound(); // If the class is not found, return a 404 error
-        }
-        return View(classe); // Return the class data to the view for absence marking
-    }
-    [HttpPost]
-    public async Task<IActionResult> MarkAbsence(int classeId, int[] etudiantIds, int matiereId, DateTime date, bool isAbsent)
-    {
-        if (etudiantIds == null || etudiantIds.Length == 0)
-        {
-            // Handle case where no students are selected
-            ModelState.AddModelError("", "No students selected.");
-            return View();  // Optionally return a view with an error message
+            _context = context;
         }
 
-        // Loop through all selected students
-        foreach (var etudiantId in etudiantIds)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<FicheAbsence>>> GetFicheAbsences()
         {
-            // Create FicheAbsence record (this is the absence record for the class)
-            var ficheAbsence = new FicheAbsence
+            return await _context.FichesAbsence.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FicheAbsence>> GetFicheAbsence(int id)
+        {
+            var ficheAbsence = await _context.FichesAbsence.FindAsync(id);
+            if (ficheAbsence == null) return NotFound();
+            return ficheAbsence;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<FicheAbsence>> CreateFicheAbsence([FromBody] FicheAbsence ficheAbsence)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            _context.FichesAbsence.Add(ficheAbsence);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetFicheAbsence), new { id = ficheAbsence.CodeFicheAbsence }, ficheAbsence);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateFicheAbsence(int id, [FromBody] FicheAbsence ficheAbsence)
+        {
+            if (id != ficheAbsence.CodeFicheAbsence) return BadRequest();
+            _context.Entry(ficheAbsence).State = EntityState.Modified;
+            try
             {
-                CodeClasse = classeId,  // Use the correct class ID
-                CodeMatiere = matiereId,
-                DateJour = date,
-                CodeEnseignant = 1 // Set a placeholder or derive this from the logged-in user, if necessary
-            };
-
-            await _context.AddAsync(ficheAbsence);  // Add the FicheAbsence record to the DB
-            await _context.SaveChangesAsync();  // Save changes to the database
-
-            // Create LigneFicheAbsence record (this stores the individual student absence data)
-            var ligneFicheAbsence = new LigneFicheAbsence
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
             {
-                CodeEtudiant = etudiantId,
-                CodeFicheAbsence = ficheAbsence.CodeFicheAbsence,
-                IsAbsent = isAbsent
-            };
-
-            await _context.AddAsync(ligneFicheAbsence);  // Add the LigneFicheAbsence to the DB
-            await _context.SaveChangesAsync();  // Save changes to the database
+                if (!_context.FichesAbsence.Any(f => f.CodeFicheAbsence == id)) return NotFound();
+                throw;
+            }
+            return NoContent();
         }
 
-        return RedirectToAction("Index");  // Redirect to another view, you can change it to a more specific view
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFicheAbsence(int id)
+        {
+            var ficheAbsence = await _context.FichesAbsence.FindAsync(id);
+            if (ficheAbsence == null) return NotFound();
+
+            _context.FichesAbsence.Remove(ficheAbsence);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
-
-
 }
