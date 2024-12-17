@@ -1,18 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace mini.project.Models
 {
     public class LigneFicheAbsence
     {
         [Key]
-        public int CodeLigneFicheAbsence { get; set; }  // Unique key for this line record
-        public int CodeEtudiant { get; set; }  // Student ID
-        public int CodeFicheAbsence { get; set; }  // FicheAbsence ID (Foreign Key)
+        public int CodeLigneFicheAbsence { get; set; }
+        [ForeignKey("Etudiant")]
+        public int CodeEtudiant { get; set; }
+        [ForeignKey("FicheAbsence")]
+        public int CodeFicheAbsence { get; set; }
 
-        public bool IsAbsent { get; set; }  // Indicates if the student was absent
+        public bool IsAbsent { get; set; }
 
-        // Navigation properties
-        public Etudiant Etudiant { get; set; }  // Associated student
-        public FicheAbsence FicheAbsence { get; set; }  // Associated FicheAbsence record
+        public Etudiant? Etudiant { get; set; }
+        public FicheAbsence? FicheAbsence { get; set; }
     }
 }

@@ -1,72 +1,103 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace esprim.Controllers
+public class EnseignantController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class EnseignantController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public EnseignantController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public EnseignantController(MyDbContext context)
-        {
-            _context = context;
-        }
+    // GET: Enseignant/Index
+    public async Task<IActionResult> Index()
+    {
+        var enseignants = await _context.Enseignants
+                                        .Include(e => e.Departement)
+                                        .Include(e => e.Grade)
+                                        .ToListAsync();
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Enseignant>>> GetEnseignants()
-        {
-            return await _context.Enseignants.ToListAsync();
-        }
+        ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement");
+        ViewData["GradeList"] = new SelectList(_context.Grades, "CodeGrade", "NomGrade");
+        return View(enseignants);
+    }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Enseignant>> GetEnseignant(int id)
-        {
-            var enseignant = await _context.Enseignants.FindAsync(id);
-            if (enseignant == null) return NotFound();
-            return enseignant;
-        }
+    // GET: Enseignant/Create
+    public IActionResult Create()
+    {
+        ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement");
+        ViewData["GradeList"] = new SelectList(_context.Grades, "CodeGrade", "NomGrade");
+        return View();
+    }
 
-        [HttpPost]
-        public async Task<ActionResult<Enseignant>> CreateEnseignant([FromBody] Enseignant enseignant)
+    // POST: Enseignant/Create
+    [HttpPost]
+    public async Task<IActionResult> Create(Enseignant enseignant)
+    {
+        if (ModelState.IsValid)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _context.Enseignants.Add(enseignant);
+            _context.Add(enseignant);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetEnseignant), new { id = enseignant.CodeEnseignant }, enseignant);
+            TempData["SuccessMessage"] = "Enseignant created successfully!";
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEnseignant(int id, [FromBody] Enseignant enseignant)
+        TempData["ErrorMessage"] = "Error creating Enseignant.";
+        ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement", enseignant.CodeDepartement);
+        ViewData["GradeList"] = new SelectList(_context.Grades, "CodeGrade", "NomGrade", enseignant.CodeGrade);
+        return View(enseignant);
+    }
+
+    // POST: Enseignant/Edit
+    [HttpPost]
+    public async Task<IActionResult> Edit(Enseignant enseignant)
+    {
+        if (ModelState.IsValid)
         {
-            if (id != enseignant.CodeEnseignant) return BadRequest();
-            _context.Entry(enseignant).State = EntityState.Modified;
             try
             {
+                _context.Update(enseignant);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Enseignant updated successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Enseignants.Any(e => e.CodeEnseignant == id)) return NotFound();
-                throw;
+                if (!_context.Enseignants.Any(e => e.CodeEnseignant == enseignant.CodeEnseignant))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEnseignant(int id)
-        {
-            var enseignant = await _context.Enseignants.FindAsync(id);
-            if (enseignant == null) return NotFound();
+        TempData["ErrorMessage"] = "Error updating Enseignant.";
+        ViewData["DepartementList"] = new SelectList(_context.Departements, "CodeDepartement", "NomDepartement", enseignant.CodeDepartement);
+        ViewData["GradeList"] = new SelectList(_context.Grades, "CodeGrade", "NomGrade", enseignant.CodeGrade);
+        return View(enseignant);
+    }
 
+    // POST: Enseignant/Delete
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var enseignant = await _context.Enseignants.FindAsync(id);
+        if (enseignant != null)
+        {
             _context.Enseignants.Remove(enseignant);
             await _context.SaveChangesAsync();
-            return NoContent();
+            TempData["SuccessMessage"] = "Enseignant deleted successfully!";
         }
+        else
+        {
+            TempData["ErrorMessage"] = "Enseignant not found.";
+        }
+        return RedirectToAction(nameof(Index));
     }
 }

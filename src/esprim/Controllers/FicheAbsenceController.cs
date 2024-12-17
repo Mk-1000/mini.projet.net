@@ -1,72 +1,85 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace esprim.Controllers
+public class FicheAbsenceController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class FicheAbsenceController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public FicheAbsenceController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public FicheAbsenceController(MyDbContext context)
-        {
-            _context = context;
-        }
+    // GET: FicheAbsence/Index
+    public async Task<IActionResult> Index()
+    {
+        var fichesAbsence = await _context.FichesAbsence
+                                    .Include(f => f.Matiere)
+                                    .Include(f => f.Enseignant)
+                                    .Include(f => f.Classe)
+                                    .ToListAsync();
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FicheAbsence>>> GetFicheAbsences()
-        {
-            return await _context.FichesAbsence.ToListAsync();
-        }
+        ViewData["MatiereList"] = new SelectList(_context.Matieres, "CodeMatiere", "NomMatiere");
+        ViewData["EnseignantList"] = new SelectList(_context.Enseignants, "CodeEnseignant", "Nom");
+        ViewData["ClasseList"] = new SelectList(_context.Classes, "CodeClasse", "NomClasse");
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FicheAbsence>> GetFicheAbsence(int id)
-        {
-            var ficheAbsence = await _context.FichesAbsence.FindAsync(id);
-            if (ficheAbsence == null) return NotFound();
-            return ficheAbsence;
-        }
+        return View(fichesAbsence);
+    }
 
-        [HttpPost]
-        public async Task<ActionResult<FicheAbsence>> CreateFicheAbsence([FromBody] FicheAbsence ficheAbsence)
+    // POST: FicheAbsence/Create
+    [HttpPost]
+    public async Task<IActionResult> Create(FicheAbsence ficheAbsence)
+    {
+        if (ModelState.IsValid)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _context.FichesAbsence.Add(ficheAbsence);
+            _context.Add(ficheAbsence);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetFicheAbsence), new { id = ficheAbsence.CodeFicheAbsence }, ficheAbsence);
+            TempData["SuccessMessage"] = "FicheAbsence created successfully!";
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFicheAbsence(int id, [FromBody] FicheAbsence ficheAbsence)
+        TempData["ErrorMessage"] = "Error creating FicheAbsence.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    // POST: FicheAbsence/Edit
+    [HttpPost]
+    public async Task<IActionResult> Edit(FicheAbsence ficheAbsence)
+    {
+        if (ModelState.IsValid)
         {
-            if (id != ficheAbsence.CodeFicheAbsence) return BadRequest();
-            _context.Entry(ficheAbsence).State = EntityState.Modified;
             try
             {
+                _context.Update(ficheAbsence);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "FicheAbsence updated successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.FichesAbsence.Any(f => f.CodeFicheAbsence == id)) return NotFound();
-                throw;
+                TempData["ErrorMessage"] = "Error updating FicheAbsence.";
             }
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
+        return RedirectToAction(nameof(Index));
+    }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFicheAbsence(int id)
+    // POST: FicheAbsence/Delete
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var ficheAbsence = await _context.FichesAbsence.FindAsync(id);
+        if (ficheAbsence != null)
         {
-            var ficheAbsence = await _context.FichesAbsence.FindAsync(id);
-            if (ficheAbsence == null) return NotFound();
-
             _context.FichesAbsence.Remove(ficheAbsence);
             await _context.SaveChangesAsync();
-            return NoContent();
+            TempData["SuccessMessage"] = "FicheAbsence deleted successfully!";
         }
+        else
+        {
+            TempData["ErrorMessage"] = "FicheAbsence not found.";
+        }
+        return RedirectToAction(nameof(Index));
     }
 }

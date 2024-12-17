@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Threading.Tasks;
-using System.Linq;
 
 public class EtudiantController : Controller
 {
@@ -16,39 +15,67 @@ public class EtudiantController : Controller
     // GET: Etudiant/Index
     public async Task<IActionResult> Index()
     {
-        var etudiants = await _context.Etudiants.Include(e => e.Classe).ToListAsync();
-        ViewBag.Classes = await _context.Classes.ToListAsync();
+        var etudiants = await _context.Etudiants
+                                      .Include(e => e.Classe)
+                                      .ToListAsync();
+
+        ViewData["ClasseList"] = new SelectList(_context.Classes, "CodeClasse", "NomClasse");
         return View(etudiants);
+    }
+
+    // GET: Etudiant/Create
+    public IActionResult Create()
+    {
+        ViewData["ClasseList"] = new SelectList(_context.Classes, "CodeClasse", "NomClasse");
+        return View();
     }
 
     // POST: Etudiant/Create
     [HttpPost]
-    public async Task<IActionResult> Create([Bind("CodeEtudiant,Nom,Prenom,DateNaissance,CodeClasse")] Etudiant etudiant)
+    public async Task<IActionResult> Create(Etudiant etudiant)
     {
         if (ModelState.IsValid)
         {
             _context.Add(etudiant);
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Etudiant added successfully!";
+            TempData["SuccessMessage"] = "Etudiant created successfully!";
             return RedirectToAction(nameof(Index));
         }
+
         TempData["ErrorMessage"] = "Error creating Etudiant.";
-        return RedirectToAction(nameof(Index));
+        ViewData["ClasseList"] = new SelectList(_context.Classes, "CodeClasse", "NomClasse", etudiant.CodeClasse);
+        return View(etudiant);
     }
 
     // POST: Etudiant/Edit
     [HttpPost]
-    public async Task<IActionResult> Edit([Bind("CodeEtudiant,Nom,Prenom,DateNaissance,CodeClasse")] Etudiant etudiant)
+    public async Task<IActionResult> Edit(Etudiant etudiant)
     {
         if (ModelState.IsValid)
         {
-            _context.Update(etudiant);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Etudiant updated successfully!";
+            try
+            {
+                _context.Update(etudiant);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Etudiant updated successfully!";
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Etudiants.Any(e => e.CodeEtudiant == etudiant.CodeEtudiant))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
+
         TempData["ErrorMessage"] = "Error updating Etudiant.";
-        return RedirectToAction(nameof(Index));
+        ViewData["ClasseList"] = new SelectList(_context.Classes, "CodeClasse", "NomClasse", etudiant.CodeClasse);
+        return View(etudiant);
     }
 
     // POST: Etudiant/Delete
