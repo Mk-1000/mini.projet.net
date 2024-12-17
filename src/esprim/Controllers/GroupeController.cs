@@ -1,92 +1,123 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace esprim.Controllers
+public class GroupeController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GroupeController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public GroupeController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public GroupeController(MyDbContext context)
+    // GET: Groupe/Index
+    public async Task<IActionResult> Index()
+    {
+        var groupes = await _context.Groupes.ToListAsync();
+        return View(groupes);
+    }
+
+    // GET: Groupe/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: Groupe/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("CodeGroupe,NomGroupe")] Groupe groupe)
+    {
+        if (ModelState.IsValid)
         {
-            _context = context;
-        }
-
-        // GET: api/Groupe
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Groupe>>> GetGroupes()
-        {
-            return await _context.Groupes.Include(g => g.Classe).ToListAsync();
-        }
-
-        // GET: api/Groupe/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Groupe>> GetGroupe(int id)
-        {
-            var groupe = await _context.Groupes
-                .Include(g => g.Classe)
-                .FirstOrDefaultAsync(g => g.CodeGroupe == id);
-
-            if (groupe == null)
-                return NotFound();
-
-            return groupe;
-        }
-
-        // POST: api/Groupe
-        [HttpPost]
-        public async Task<ActionResult<Groupe>> CreateGroupe([FromBody] Groupe groupe)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            _context.Groupes.Add(groupe);
+            _context.Add(groupe);
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        return View(groupe);
+    }
 
-            return CreatedAtAction(nameof(GetGroupe), new { id = groupe.CodeGroupe }, groupe);
+    // GET: Groupe/Edit/5
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
         }
 
-        // PUT: api/Groupe/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGroupe(int id, [FromBody] Groupe groupe)
+        var groupe = await _context.Groupes.FindAsync(id);
+        if (groupe == null)
         {
-            if (id != groupe.CodeGroupe)
-                return BadRequest();
+            return NotFound();
+        }
+        return View(groupe);
+    }
 
-            _context.Entry(groupe).State = EntityState.Modified;
+    // POST: Groupe/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("CodeGroupe,NomGroupe")] Groupe groupe)
+    {
+        if (id != groupe.CodeGroupe)
+        {
+            return NotFound();
+        }
 
+        if (ModelState.IsValid)
+        {
             try
             {
+                _context.Update(groupe);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Groupes.Any(g => g.CodeGroupe == id))
+                if (!GroupeExists(groupe.CodeGroupe))
+                {
                     return NotFound();
-                throw;
+                }
+                else
+                {
+                    throw;
+                }
             }
-
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
+        return View(groupe);
+    }
 
-        // DELETE: api/Groupe/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroupe(int id)
+    // GET: Groupe/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
         {
-            var groupe = await _context.Groupes.FindAsync(id);
-            if (groupe == null)
-                return NotFound();
-
-            _context.Groupes.Remove(groupe);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
+
+        var groupe = await _context.Groupes
+            .FirstOrDefaultAsync(m => m.CodeGroupe == id);
+        if (groupe == null)
+        {
+            return NotFound();
+        }
+
+        return View(groupe);
+    }
+
+    // POST: Groupe/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var groupe = await _context.Groupes.FindAsync(id);
+        _context.Groupes.Remove(groupe);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    private bool GroupeExists(int id)
+    {
+        return _context.Groupes.Any(e => e.CodeGroupe == id);
     }
 }

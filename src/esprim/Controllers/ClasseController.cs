@@ -1,74 +1,142 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace esprim.Controllers
+public class ClasseController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClasseController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public ClasseController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public ClasseController(MyDbContext context)
-        {
-            _context = context;
-        }
+    // GET: Classe/Index
+    public async Task<IActionResult> Index()
+    {
+        // Fetch all required data for drop-downs
+        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement");
+        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe");
+        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere");
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Classe>>> GetClasses()
-        {
-            return await _context.Classes.Include(c => c.Departement).ToListAsync();
-        }
+        // Fetch all classes
+        var classes = await _context.Classes.ToListAsync();
+        return View(classes);
+    }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Classe>> GetClasse(int id)
+    // POST: Classe/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Classe classe)
+    {
+        if (ModelState.IsValid)
         {
-            var classe = await _context.Classes.Include(c => c.Departement).FirstOrDefaultAsync(c => c.CodeClasse == id);
-            if (classe == null) return NotFound();
-            return classe;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Classe>> CreateClasse([FromBody] Classe classe)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _context.Classes.Add(classe);
+            _context.Add(classe);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetClasse), new { id = classe.CodeClasse }, classe);
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClasse(int id, [FromBody] Classe classe)
-        {
-            if (id != classe.CodeClasse) return BadRequest();
+        // Repopulate drop-downs in case of validation error
+        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement");
+        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe");
+        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere");
 
-            _context.Entry(classe).State = EntityState.Modified;
+        return View(nameof(Index), await _context.Classes.ToListAsync()); // Return to Index view
+    }
+
+    // GET: Classe/Edit/5
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var classe = await _context.Classes.FindAsync(id);
+        if (classe == null)
+        {
+            return NotFound();
+        }
+
+        // Populate dropdowns for editing
+        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement", classe.CodeDepartement);
+        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe", classe.CodeGroupe);
+        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere", classe.CodeMatiere);
+
+        return View(classe);
+    }
+
+    // POST: Classe/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("CodeClasse,NomClasse,CodeGroupe,CodeDepartement,CodeMatiere")] Classe classe)
+    {
+        if (id != classe.CodeClasse)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
+        {
             try
             {
+                _context.Update(classe);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Classes.Any(e => e.CodeClasse == id)) return NotFound();
-                throw;
+                if (!ClasseExists(classe.CodeClasse))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClasse(int id)
+        // Repopulate drop-downs if validation fails
+        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement", classe.CodeDepartement);
+        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe", classe.CodeGroupe);
+        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere", classe.CodeMatiere);
+
+        return View(classe);
+    }
+
+    // GET: Classe/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
         {
-            var classe = await _context.Classes.FindAsync(id);
-            if (classe == null) return NotFound();
-
-            _context.Classes.Remove(classe);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
+
+        var classe = await _context.Classes
+            .FirstOrDefaultAsync(m => m.CodeClasse == id);
+        if (classe == null)
+        {
+            return NotFound();
+        }
+
+        return View(classe);
+    }
+
+    // POST: Classe/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var classe = await _context.Classes.FindAsync(id);
+        _context.Classes.Remove(classe);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    private bool ClasseExists(int id)
+    {
+        return _context.Classes.Any(e => e.CodeClasse == id);
     }
 }

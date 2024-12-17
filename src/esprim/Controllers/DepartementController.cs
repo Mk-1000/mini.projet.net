@@ -2,75 +2,122 @@
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
 
-namespace esprim.Controllers
+public class DepartementController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DepartementController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public DepartementController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public DepartementController(MyDbContext context)
+    // GET: Departement/Index
+    public async Task<IActionResult> Index()
+    {
+        var departements = await _context.Departements.ToListAsync();
+        return View(departements);
+    }
+
+    // GET: Departement/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: Departement/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("CodeDepartement,NomDepartement")] Departement departement)
+    {
+        if (ModelState.IsValid)
         {
-            _context = context;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Departement>>> GetDepartements()
-        {
-            return await _context.Departements.Include(d => d.Classes).ToListAsync();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Departement>> GetDepartement(int id)
-        {
-            var departement = await _context.Departements
-                .Include(d => d.Classes)
-                .FirstOrDefaultAsync(d => d.CodeDepartement == id);
-
-            if (departement == null) return NotFound();
-            return departement;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Departement>> CreateDepartement([FromBody] Departement departement)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _context.Departements.Add(departement);
+            _context.Add(departement);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetDepartement), new { id = departement.CodeDepartement }, departement);
+            return RedirectToAction(nameof(Index));
+        }
+        return View(departement);
+    }
+
+    // GET: Departement/Edit/5
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDepartement(int id, [FromBody] Departement departement)
+        var departement = await _context.Departements.FindAsync(id);
+        if (departement == null)
         {
-            if (id != departement.CodeDepartement) return BadRequest();
+            return NotFound();
+        }
+        return View(departement);
+    }
 
-            _context.Entry(departement).State = EntityState.Modified;
+    // POST: Departement/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("CodeDepartement,NomDepartement")] Departement departement)
+    {
+        if (id != departement.CodeDepartement)
+        {
+            return NotFound();
+        }
 
+        if (ModelState.IsValid)
+        {
             try
             {
+                _context.Update(departement);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Departements.Any(d => d.CodeDepartement == id)) return NotFound();
-                throw;
+                if (!DepartementExists(departement.CodeDepartement))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
-
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
+        return View(departement);
+    }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDepartement(int id)
+    // GET: Departement/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
         {
-            var departement = await _context.Departements.FindAsync(id);
-            if (departement == null) return NotFound();
-
-            _context.Departements.Remove(departement);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NotFound();
         }
+
+        var departement = await _context.Departements
+            .FirstOrDefaultAsync(m => m.CodeDepartement == id);
+        if (departement == null)
+        {
+            return NotFound();
+        }
+
+        return View(departement);
+    }
+
+    // POST: Departement/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var departement = await _context.Departements.FindAsync(id);
+        _context.Departements.Remove(departement);
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
+    private bool DepartementExists(int id)
+    {
+        return _context.Departements.Any(e => e.CodeDepartement == id);
     }
 }

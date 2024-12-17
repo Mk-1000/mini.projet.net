@@ -10,15 +10,12 @@ public class MatiereController : Controller
     {
         _context = context;
     }
-
-    // GET: Matiere/Index
     public async Task<IActionResult> Index()
     {
         var matieres = await _context.Matieres.ToListAsync();
         return View(matieres);
     }
 
-    // POST: Matiere/Create
     [HttpPost]
     public async Task<IActionResult> Create(Matiere matiere)
     {
@@ -31,7 +28,6 @@ public class MatiereController : Controller
         return View(matiere);
     }
 
-    // POST: Matiere/Edit
     [HttpPost]
     public async Task<IActionResult> Edit(Matiere matiere)
     {
@@ -58,7 +54,6 @@ public class MatiereController : Controller
         return View(matiere);
     }
 
-    // POST: Matiere/Delete
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {

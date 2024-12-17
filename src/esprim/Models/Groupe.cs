@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace mini.project.Models
 {
     public class Groupe
@@ -9,6 +8,6 @@ namespace mini.project.Models
         public string NomGroupe { get; set; }
 
         // Navigation property
-        public Classe Classe { get; set; }
+        public ICollection<Classe> Classes { get; set; } = new List<Classe>(); // Default empty list
     }
 }

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<mini.project.Models.Groupe>
+
+@{
+    ViewData["Title"] = "Groupe Management";
+}
+
+<div class="container py-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Groupe Management</h3>
+        </div>
+        <div class="card-body">
+            <h5>Create New Groupe</h5>
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="NomGroupe">Nom Groupe</label>
+                    <input type="text" class="form-control" id="NomGroupe" name="NomGroupe" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Create Groupe</button>
+            </form>
+
+            <h5 class="mt-4">Existing Groupes</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Code Groupe</th>
+                        <th>Nom Groupe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var groupe in Model)
+                    {
+                        <tr>
+                            <td>@groupe.CodeGroupe</td>
+                            <td>@groupe.NomGroupe</td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Groupe", new { id = groupe.CodeGroupe })" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="@Url.Action("Delete", "Groupe", new { id = groupe.CodeGroupe })" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

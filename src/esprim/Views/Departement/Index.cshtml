@@ -1,0 +1,47 @@
+﻿@model IEnumerable<mini.project.Models.Departement>
+
+@{
+    ViewData["Title"] = "Departement Management";
+}
+
+<div class="container py-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Departement Management</h3>
+        </div>
+        <div class="card-body">
+            <h5>Create New Departement</h5>
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="NomDepartement">Nom Departement</label>
+                    <input type="text" class="form-control" id="NomDepartement" name="NomDepartement" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Create Departement</button>
+            </form>
+
+            <h5 class="mt-4">Existing Departements</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Code Departement</th>
+                        <th>Nom Departement</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var departement in Model)
+                    {
+                        <tr>
+                            <td>@departement.CodeDepartement</td>
+                            <td>@departement.NomDepartement</td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Departement", new { id = departement.CodeDepartement })" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="@Url.Action("Delete", "Departement", new { id = departement.CodeDepartement })" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

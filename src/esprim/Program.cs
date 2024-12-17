@@ -34,6 +34,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "swagger"; // Access Swagger at /swagger URL
     });
 }
+app.MapControllerRoute(
+    name: "etudiantRoute",
+    pattern: "{controller=Etudiant}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "matiereRoute",

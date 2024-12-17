@@ -25,18 +25,20 @@ namespace mini.project.Models
             modelBuilder.Entity<Classe>()
                 .HasKey(c => c.CodeClasse);
 
-            modelBuilder.Entity<Departement>()
-                .HasKey(d => d.CodeDepartement);
+            // Define foreign key relationships for Classe
+            modelBuilder.Entity<Classe>()
+                .HasOne(c => c.Groupe)
+                .WithMany(g => g.Classes)
+                .HasForeignKey(c => c.CodeGroupe)
+                .OnDelete(DeleteBehavior.Restrict);  // or Cascade, SetNull, based on your requirements
 
-            modelBuilder.Entity<Enseignant>()
-                .HasKey(e => e.CodeEnseignant);
+            modelBuilder.Entity<Classe>()
+                .HasOne(c => c.Departement)
+                .WithMany(d => d.Classes)
+                .HasForeignKey(c => c.CodeDepartement)
+                .OnDelete(DeleteBehavior.Restrict);  // or Cascade, SetNull
 
-            modelBuilder.Entity<Etudiant>()
-                .HasKey(e => e.CodeEtudiant);
-
-            modelBuilder.Entity<FicheAbsence>()
-                .HasKey(f => f.CodeFicheAbsence);
-
+            // Define other foreign key constraints for your models as well
             modelBuilder.Entity<FicheAbsenceSeance>()
                 .HasKey(f => new { f.CodeFicheAbsence, f.CodeSeance });
 
@@ -51,7 +53,7 @@ namespace mini.project.Models
 
             modelBuilder.Entity<Grade>()
                 .HasKey(g => g.CodeGrade);
-
         }
+
     }
 }

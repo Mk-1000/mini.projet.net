@@ -1,0 +1,87 @@
+﻿@model IEnumerable<mini.project.Models.Classe>
+
+@{
+    ViewData["Title"] = "Classe Management";
+}
+
+<div class="container py-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Classe Management</h3>
+        </div>
+        <div class="card-body">
+            <h5>Create New Classe</h5>
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="NomClasse">Nom Classe</label>
+                    <input type="text" class="form-control" id="NomClasse" name="NomClasse" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="CodeGroupe">Groupe</label>
+                    <select class="form-control" id="CodeGroupe" name="CodeGroupe" required>
+                        <option value="">-- Select Groupe --</option>
+                        @foreach (var groupe in ViewBag.Groupes as SelectList)
+                        {
+                            <option value="@groupe.Value">@groupe.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="CodeDepartement">Departement</label>
+                    <select class="form-control" id="CodeDepartement" name="CodeDepartement" required>
+                        <option value="">-- Select Departement --</option>
+                        @foreach (var departement in ViewBag.Departements as SelectList)
+                        {
+                            <option value="@departement.Value">@departement.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="CodeMatiere">Matiere</label>
+                    <select class="form-control" id="CodeMatiere" name="CodeMatiere" required>
+                        <option value="">-- Select Matiere --</option>
+                        @foreach (var matiere in ViewBag.Matieres as SelectList)
+                        {
+                            <option value="@matiere.Value">@matiere.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Classe</button>
+            </form>
+
+            <h5 class="mt-4">Existing Classes</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Code Classe</th>
+                        <th>Nom Classe</th>
+                        <th>Groupe</th>
+                        <th>Departement</th>
+                        <th>Matiere</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var classe in Model)
+                    {
+                        <tr>
+                            <td>@classe.CodeClasse</td>
+                            <td>@classe.NomClasse</td>
+                            <td>@classe.CodeGroupe</td>
+                            <td>@classe.CodeDepartement</td>
+                            <td>@classe.CodeMatiere</td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Classe", new { id = classe.CodeClasse })" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="@Url.Action("Delete", "Classe", new { id = classe.CodeClasse })" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

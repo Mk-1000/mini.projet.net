@@ -1,72 +1,89 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace esprim.Controllers
+public class EtudiantController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class EtudiantController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public EtudiantController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public EtudiantController(MyDbContext context)
-        {
-            _context = context;
-        }
+    // Index Action - Fetch students with their classes
+    public async Task<IActionResult> Index()
+    {
+        // Ensure you include classes in the context if you need to display them in the view
+        var etudiants = await _context.Etudiants.Include(e => e.Classe).ToListAsync();
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Etudiant>>> GetEtudiants()
-        {
-            return await _context.Etudiants.ToListAsync();
-        }
+        // Populate ViewBag with classes from the database
+        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse");
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Etudiant>> GetEtudiant(int id)
-        {
-            var etudiant = await _context.Etudiants.FindAsync(id);
-            if (etudiant == null) return NotFound();
-            return etudiant;
-        }
+        return View(etudiants);
+    }
 
-        [HttpPost]
-        public async Task<ActionResult<Etudiant>> CreateEtudiant([FromBody] Etudiant etudiant)
+
+    // Create Action - Get the list of classes for the dropdown
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse");
+        return View();
+    }
+
+    // Create Action - Handle the form submission for adding a new student
+    [HttpPost]
+    public async Task<IActionResult> Create(Etudiant etudiant)
+    {
+        if (ModelState.IsValid)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _context.Etudiants.Add(etudiant);
+            _context.Add(etudiant);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetEtudiant), new { id = etudiant.CodeEtudiant }, etudiant);
+            return RedirectToAction(nameof(Index));
         }
+        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse", etudiant.CodeClasse);
+        return View(etudiant);
+    }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEtudiant(int id, [FromBody] Etudiant etudiant)
+    // Edit Action - Get the list of classes and the student to edit
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var etudiant = await _context.Etudiants.FindAsync(id);
+        if (etudiant == null)
         {
-            if (id != etudiant.CodeEtudiant) return BadRequest();
-            _context.Entry(etudiant).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Etudiants.Any(e => e.CodeEtudiant == id)) return NotFound();
-                throw;
-            }
-            return NoContent();
+            return NotFound();
         }
+        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse", etudiant.CodeClasse);
+        return View(etudiant);
+    }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEtudiant(int id)
+    // Edit Action - Handle the form submission for editing a student
+    [HttpPost]
+    public async Task<IActionResult> Edit(Etudiant etudiant)
+    {
+        if (ModelState.IsValid)
         {
-            var etudiant = await _context.Etudiants.FindAsync(id);
-            if (etudiant == null) return NotFound();
+            _context.Update(etudiant);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse", etudiant.CodeClasse);
+        return View(etudiant);
+    }
 
+    // Delete Action - Delete a student
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var etudiant = await _context.Etudiants.FindAsync(id);
+        if (etudiant != null)
+        {
             _context.Etudiants.Remove(etudiant);
             await _context.SaveChangesAsync();
-            return NoContent();
         }
+        return RedirectToAction(nameof(Index));
     }
 }

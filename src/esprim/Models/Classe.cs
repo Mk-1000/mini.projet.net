@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿using mini.project.Models;
+using System.ComponentModel.DataAnnotations;
 namespace mini.project.Models
 {
     public class Classe
@@ -11,10 +11,9 @@ namespace mini.project.Models
         public int CodeDepartement { get; set; }
         public int CodeMatiere { get; set; }
 
-
         // Navigation properties
         public Departement Departement { get; set; }
-        public ICollection<Groupe> Groupes { get; set; } = new List<Groupe>(); // Default empty list
+        public Groupe Groupe { get; set; }  // Reference to Groupe
         public ICollection<FicheAbsence> FichesAbsence { get; set; } = new List<FicheAbsence>(); // Default empty list
         public ICollection<Etudiant> Etudiants { get; set; } = new List<Etudiant>(); // Default empty list
     }
