@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class ClasseController : Controller
 {
@@ -13,22 +12,60 @@ public class ClasseController : Controller
     }
 
     // GET: Classe/Index
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? id, string actionType, [Bind("CodeClasse,NomClasse,CodeGroupe,CodeDepartement")] Classe classe)
     {
-        // Fetch all required data for drop-downs
-        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement");
-        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe");
-        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere");
+        if (actionType == "Create" && ModelState.IsValid)
+        {
+            _context.Add(classe);
+            await _context.SaveChangesAsync();
+        }
+        else if (actionType == "Edit" && id != null && ModelState.IsValid)
+        {
+            var existingClasse = await _context.Classes.FindAsync(id);
+            if (existingClasse != null)
+            {
+                existingClasse.NomClasse = classe.NomClasse;
+                existingClasse.CodeGroupe = classe.CodeGroupe;
+                existingClasse.CodeDepartement = classe.CodeDepartement;
+                _context.Update(existingClasse);
+                await _context.SaveChangesAsync();
+            }
+        }
+        else if (actionType == "Delete" && id != null)
+        {
+            var classeToDelete = await _context.Classes.FindAsync(id);
+            if (classeToDelete != null)
+            {
+                _context.Classes.Remove(classeToDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
 
-        // Fetch all classes
-        var classes = await _context.Classes.ToListAsync();
+        // Retrieve and display all classes
+        var classes = await _context.Classes
+            .Include(c => c.Groupe)
+            .Include(c => c.Departement)
+            .ToListAsync();
+        ViewBag.Groups = _context.Groupes.ToList();
+        ViewBag.Departements = _context.Departements.ToList();
+
         return View(classes);
+    }
+
+
+    // GET: Classe/Create
+    public IActionResult Create()
+    {
+        // Populate dropdowns for groups and departments
+        ViewBag.Groups = _context.Groupes.ToList();
+        ViewBag.Departements = _context.Departements.ToList();
+        return View();
     }
 
     // POST: Classe/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Classe classe)
+    public async Task<IActionResult> Create([Bind("CodeClasse,NomClasse,CodeGroupe,CodeDepartement")] Classe classe)
     {
         if (ModelState.IsValid)
         {
@@ -37,12 +74,10 @@ public class ClasseController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        // Repopulate drop-downs in case of validation error
-        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement");
-        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe");
-        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere");
-
-        return View(nameof(Index), await _context.Classes.ToListAsync()); // Return to Index view
+        // Reload groups and departments if the model is invalid
+        ViewBag.Groups = _context.Groupes.ToList();
+        ViewBag.Departements = _context.Departements.ToList();
+        return View(classe);
     }
 
     // GET: Classe/Edit/5
@@ -53,24 +88,25 @@ public class ClasseController : Controller
             return NotFound();
         }
 
-        var classe = await _context.Classes.FindAsync(id);
+        var classe = await _context.Classes
+            .Include(c => c.Groupe)
+            .Include(c => c.Departement)
+            .FirstOrDefaultAsync(c => c.CodeClasse == id);
+
         if (classe == null)
         {
             return NotFound();
         }
 
-        // Populate dropdowns for editing
-        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement", classe.CodeDepartement);
-        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe", classe.CodeGroupe);
-        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere", classe.CodeMatiere);
-
+        ViewBag.Groups = _context.Groupes.ToList();
+        ViewBag.Departements = _context.Departements.ToList();
         return View(classe);
     }
 
     // POST: Classe/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("CodeClasse,NomClasse,CodeGroupe,CodeDepartement,CodeMatiere")] Classe classe)
+    public async Task<IActionResult> Edit(int id, [Bind("CodeClasse,NomClasse,CodeGroupe,CodeDepartement")] Classe classe)
     {
         if (id != classe.CodeClasse)
         {
@@ -98,11 +134,8 @@ public class ClasseController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        // Repopulate drop-downs if validation fails
-        ViewBag.Departements = new SelectList(await _context.Departements.ToListAsync(), "CodeDepartement", "NomDepartement", classe.CodeDepartement);
-        ViewBag.Groupes = new SelectList(await _context.Groupes.ToListAsync(), "CodeGroupe", "NomGroupe", classe.CodeGroupe);
-        ViewBag.Matieres = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere", classe.CodeMatiere);
-
+        ViewBag.Groups = _context.Groupes.ToList();
+        ViewBag.Departements = _context.Departements.ToList();
         return View(classe);
     }
 
@@ -115,7 +148,10 @@ public class ClasseController : Controller
         }
 
         var classe = await _context.Classes
-            .FirstOrDefaultAsync(m => m.CodeClasse == id);
+            .Include(c => c.Groupe)
+            .Include(c => c.Departement)
+            .FirstOrDefaultAsync(c => c.CodeClasse == id);
+
         if (classe == null)
         {
             return NotFound();

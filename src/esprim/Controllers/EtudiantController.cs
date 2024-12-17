@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
 
@@ -12,30 +11,62 @@ public class EtudiantController : Controller
         _context = context;
     }
 
-    // Index Action - Fetch students with their classes
-    public async Task<IActionResult> Index()
+    // GET: Etudiant/Index
+    public async Task<IActionResult> Index(int? id, string actionType, [Bind("CodeEtudiant,Nom,Prenom,DateNaissance,NumInscription,Adresse,Mail,Tel,CodeClasse")] Etudiant etudiant)
     {
-        // Ensure you include classes in the context if you need to display them in the view
-        var etudiants = await _context.Etudiants.Include(e => e.Classe).ToListAsync();
+        if (actionType == "Create" && ModelState.IsValid)
+        {
+            _context.Add(etudiant);
+            await _context.SaveChangesAsync();
+        }
+        else if (actionType == "Edit" && id != null && ModelState.IsValid)
+        {
+            var existingEtudiant = await _context.Etudiants.FindAsync(id);
+            if (existingEtudiant != null)
+            {
+                existingEtudiant.Nom = etudiant.Nom;
+                existingEtudiant.Prenom = etudiant.Prenom;
+                existingEtudiant.DateNaissance = etudiant.DateNaissance;
+                existingEtudiant.NumInscription = etudiant.NumInscription;
+                existingEtudiant.Adresse = etudiant.Adresse;
+                existingEtudiant.Mail = etudiant.Mail;
+                existingEtudiant.Tel = etudiant.Tel;
+                existingEtudiant.CodeClasse = etudiant.CodeClasse;
+                _context.Update(existingEtudiant);
+                await _context.SaveChangesAsync();
+            }
+        }
+        else if (actionType == "Delete" && id != null)
+        {
+            var etudiantToDelete = await _context.Etudiants.FindAsync(id);
+            if (etudiantToDelete != null)
+            {
+                _context.Etudiants.Remove(etudiantToDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
 
-        // Populate ViewBag with classes from the database
-        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse");
+        // Retrieve and display all students
+        var etudiants = await _context.Etudiants
+            .Include(e => e.Classe)
+            .ToListAsync();
+        ViewBag.Classes = _context.Classes.ToList();
 
         return View(etudiants);
     }
 
-
-    // Create Action - Get the list of classes for the dropdown
-    [HttpGet]
-    public async Task<IActionResult> Create()
+    // GET: Etudiant/Create
+    public IActionResult Create()
     {
-        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse");
+        // Populate dropdown for classes
+        ViewBag.Classes = _context.Classes.ToList();
         return View();
     }
 
-    // Create Action - Handle the form submission for adding a new student
+    // POST: Etudiant/Create
     [HttpPost]
-    public async Task<IActionResult> Create(Etudiant etudiant)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("CodeEtudiant,Nom,Prenom,DateNaissance,NumInscription,Adresse,Mail,Tel,CodeClasse")] Etudiant etudiant)
     {
         if (ModelState.IsValid)
         {
@@ -43,47 +74,101 @@ public class EtudiantController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse", etudiant.CodeClasse);
+
+        // Reload classes if the model is invalid
+        ViewBag.Classes = _context.Classes.ToList();
         return View(etudiant);
     }
 
-    // Edit Action - Get the list of classes and the student to edit
-    [HttpGet]
-    public async Task<IActionResult> Edit(int id)
+    // GET: Etudiant/Edit/5
+    public async Task<IActionResult> Edit(int? id)
     {
-        var etudiant = await _context.Etudiants.FindAsync(id);
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var etudiant = await _context.Etudiants
+            .Include(e => e.Classe)
+            .FirstOrDefaultAsync(e => e.CodeEtudiant == id);
+
         if (etudiant == null)
         {
             return NotFound();
         }
-        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse", etudiant.CodeClasse);
+
+        ViewBag.Classes = _context.Classes.ToList();
         return View(etudiant);
     }
 
-    // Edit Action - Handle the form submission for editing a student
+    // POST: Etudiant/Edit/5
     [HttpPost]
-    public async Task<IActionResult> Edit(Etudiant etudiant)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("CodeEtudiant,Nom,Prenom,DateNaissance,NumInscription,Adresse,Mail,Tel,CodeClasse")] Etudiant etudiant)
     {
+        if (id != etudiant.CodeEtudiant)
+        {
+            return NotFound();
+        }
+
         if (ModelState.IsValid)
         {
-            _context.Update(etudiant);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Update(etudiant);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EtudiantExists(etudiant.CodeEtudiant))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
-        ViewBag.Classes = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse", etudiant.CodeClasse);
+
+        ViewBag.Classes = _context.Classes.ToList();
         return View(etudiant);
     }
 
-    // Delete Action - Delete a student
-    [HttpPost]
-    public async Task<IActionResult> Delete(int id)
+    // GET: Etudiant/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var etudiant = await _context.Etudiants
+            .Include(e => e.Classe)
+            .FirstOrDefaultAsync(e => e.CodeEtudiant == id);
+
+        if (etudiant == null)
+        {
+            return NotFound();
+        }
+
+        return View(etudiant);
+    }
+
+    // POST: Etudiant/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var etudiant = await _context.Etudiants.FindAsync(id);
-        if (etudiant != null)
-        {
-            _context.Etudiants.Remove(etudiant);
-            await _context.SaveChangesAsync();
-        }
+        _context.Etudiants.Remove(etudiant);
+        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
+    }
+
+    private bool EtudiantExists(int id)
+    {
+        return _context.Etudiants.Any(e => e.CodeEtudiant == id);
     }
 }

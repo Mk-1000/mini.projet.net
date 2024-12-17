@@ -21,22 +21,30 @@ namespace mini.project.Models
 
         // OnModelCreating configuration
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Classe>()
-                .HasKey(c => c.CodeClasse);
+        { 
+            // Primary Key configurations
+            modelBuilder.Entity<Classe>().HasKey(c => c.CodeClasse);
+            modelBuilder.Entity<Groupe>().HasKey(g => g.CodeGroupe);
+            modelBuilder.Entity<Departement>().HasKey(d => d.CodeDepartement);
 
-            // Define foreign key relationships for Classe
+            // Relationships and Foreign Key configurations
             modelBuilder.Entity<Classe>()
                 .HasOne(c => c.Groupe)
                 .WithMany(g => g.Classes)
                 .HasForeignKey(c => c.CodeGroupe)
-                .OnDelete(DeleteBehavior.Restrict);  // or Cascade, SetNull, based on your requirements
+                .OnDelete(DeleteBehavior.SetNull);  // Cascade or SetNull based on your business rules
 
             modelBuilder.Entity<Classe>()
                 .HasOne(c => c.Departement)
                 .WithMany(d => d.Classes)
                 .HasForeignKey(c => c.CodeDepartement)
-                .OnDelete(DeleteBehavior.Restrict);  // or Cascade, SetNull
+                .OnDelete(DeleteBehavior.SetNull);  // Cascade or SetNull based on your business rules
+
+            // Other relationships can be configured here as needed
+            modelBuilder.Entity<Enseignant>()
+                .HasOne(e => e.Departement)
+                .WithMany(d => d.Enseignants)
+                .HasForeignKey(e => e.CodeDepartement);
 
             // Define other foreign key constraints for your models as well
             modelBuilder.Entity<FicheAbsenceSeance>()

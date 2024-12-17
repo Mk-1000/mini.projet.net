@@ -1,20 +1,29 @@
-﻿using mini.project.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace mini.project.Models
 {
     public class Classe
     {
         [Key]
         public int CodeClasse { get; set; }
-        public string NomClasse { get; set; }
-        public int CodeGroupe { get; set; }
-        public int CodeDepartement { get; set; }
-        public int CodeMatiere { get; set; }
 
-        // Navigation properties
-        public Departement Departement { get; set; }
-        public Groupe Groupe { get; set; }  // Reference to Groupe
-        public ICollection<FicheAbsence> FichesAbsence { get; set; } = new List<FicheAbsence>(); // Default empty list
+        [Required]
+        [StringLength(100)]
+        public string NomClasse { get; set; }
+
+        [ForeignKey("Groupe")]
+        public int? CodeGroupe { get; set; }
+
+        [ForeignKey("Departement")]
+        public int? CodeDepartement { get; set; }
+
+        public Groupe? Groupe { get; set; }
+        public Departement? Departement { get; set; }
+
         public ICollection<Etudiant> Etudiants { get; set; } = new List<Etudiant>(); // Default empty list
+
+        public ICollection<FicheAbsence> FichesAbsence { get; set; } = new List<FicheAbsence>(); // Default empty list
+
     }
 }

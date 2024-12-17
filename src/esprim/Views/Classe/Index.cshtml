@@ -10,42 +10,33 @@
             <h3 class="mb-0">Classe Management</h3>
         </div>
         <div class="card-body">
+            <!-- Create Form -->
             <h5>Create New Classe</h5>
-            <form asp-action="Create" method="post">
+            <form asp-action="Index" method="post">
+                <input type="hidden" name="actionType" value="Create" />
                 <div class="mb-3">
                     <label class="form-label" for="NomClasse">Nom Classe</label>
                     <input type="text" class="form-control" id="NomClasse" name="NomClasse" required />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="CodeGroupe">Groupe</label>
-                    <select class="form-control" id="CodeGroupe" name="CodeGroupe" required>
+                    <label for="CodeGroupe" class="form-label">Groupe</label>
+                    <select class="form-control" id="CodeGroupe" name="CodeGroupe">
                         <option value="">-- Select Groupe --</option>
-                        @foreach (var groupe in ViewBag.Groupes as SelectList)
+                        @foreach (var group in ViewBag.Groups as List<mini.project.Models.Groupe>)
                         {
-                            <option value="@groupe.Value">@groupe.Text</option>
+                            <option value="@group.CodeGroupe">@group.NomGroupe</option>
                         }
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="CodeDepartement">Departement</label>
-                    <select class="form-control" id="CodeDepartement" name="CodeDepartement" required>
+                    <label for="CodeDepartement" class="form-label">Departement</label>
+                    <select class="form-control" id="CodeDepartement" name="CodeDepartement">
                         <option value="">-- Select Departement --</option>
-                        @foreach (var departement in ViewBag.Departements as SelectList)
+                        @foreach (var departement in ViewBag.Departements as List<mini.project.Models.Departement>)
                         {
-                            <option value="@departement.Value">@departement.Text</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" for="CodeMatiere">Matiere</label>
-                    <select class="form-control" id="CodeMatiere" name="CodeMatiere" required>
-                        <option value="">-- Select Matiere --</option>
-                        @foreach (var matiere in ViewBag.Matieres as SelectList)
-                        {
-                            <option value="@matiere.Value">@matiere.Text</option>
+                            <option value="@departement.CodeDepartement">@departement.NomDepartement</option>
                         }
                     </select>
                 </div>
@@ -61,7 +52,6 @@
                         <th>Nom Classe</th>
                         <th>Groupe</th>
                         <th>Departement</th>
-                        <th>Matiere</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -71,12 +61,48 @@
                         <tr>
                             <td>@classe.CodeClasse</td>
                             <td>@classe.NomClasse</td>
-                            <td>@classe.CodeGroupe</td>
-                            <td>@classe.CodeDepartement</td>
-                            <td>@classe.CodeMatiere</td>
+                            <td>@classe.Groupe?.NomGroupe</td>
+                            <td>@classe.Departement?.NomDepartement</td>
                             <td>
-                                <a href="@Url.Action("Edit", "Classe", new { id = classe.CodeClasse })" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="@Url.Action("Delete", "Classe", new { id = classe.CodeClasse })" class="btn btn-danger btn-sm">Delete</a>
+                                <!-- Edit Form -->
+                                <form asp-action="Index" method="post" style="display:inline;">
+                                    <input type="hidden" name="actionType" value="Edit" />
+                                    <input type="hidden" name="id" value="@classe.CodeClasse" />
+                                    <input type="text" class="form-control form-control-sm" name="NomClasse" value="@classe.NomClasse" />
+                                    <select class="form-control form-control-sm" name="CodeGroupe">
+                                        @foreach (var group in ViewBag.Groups as List<mini.project.Models.Groupe>)
+                                        {
+                                            if (group.CodeGroupe == classe.CodeGroupe)
+                                            {
+                                                <option value="@group.CodeGroupe" selected>@group.NomGroupe</option>
+
+                                            }
+                                            else
+                                            {
+                                                <option value="@group.CodeGroupe">@group.NomGroupe</option>
+                                            }
+                                        }
+                                    </select>
+                                    <select class="form-control form-control-sm" name="CodeDepartement">
+                                        @foreach (var departement in ViewBag.Departements as List<mini.project.Models.Departement>)
+                                        {
+                                            if (departement.CodeDepartement == classe.CodeDepartement) {
+                                                <option value="@departement.CodeDepartement" selected>@departement.NomDepartement</option>
+
+                                            } else { 
+                                                <option value="@departement.CodeDepartement">@departement.NomDepartement</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-warning btn-sm">Save</button>
+                                </form>
+
+                                <!-- Delete Form -->
+                                <form asp-action="Index" method="post" style="display:inline;">
+                                    <input type="hidden" name="actionType" value="Delete" />
+                                    <input type="hidden" name="id" value="@classe.CodeClasse" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     }
