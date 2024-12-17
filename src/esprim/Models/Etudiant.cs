@@ -11,10 +11,10 @@ namespace mini.project.Models
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public DateTime DateNaissance { get; set; }
-        public string NumInscription { get; set; }
-        public string Adresse { get; set; }
-        public string Mail { get; set; }
-        public string Tel { get; set; }
+        public string? NumInscription { get; set; }
+        public string? Adresse { get; set; }
+        public string? Mail { get; set; }
+        public string? Tel { get; set; }
 
         [ForeignKey("Classe")]
         public int? CodeClasse { get; set; }

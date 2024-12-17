@@ -18,62 +18,36 @@ public class GroupeController : Controller
         return View(groupes);
     }
 
-    // GET: Groupe/Create
-    public IActionResult Create()
-    {
-        return View();
-    }
-
     // POST: Groupe/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("CodeGroupe,NomGroupe")] Groupe groupe)
+    public async Task<IActionResult> Create(Groupe groupe)
     {
         if (ModelState.IsValid)
         {
             _context.Add(groupe);
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Groupe created successfully!";
             return RedirectToAction(nameof(Index));
         }
+        TempData["ErrorMessage"] = "Error creating Groupe.";
         return View(groupe);
     }
 
-    // GET: Groupe/Edit/5
-    public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var groupe = await _context.Groupes.FindAsync(id);
-        if (groupe == null)
-        {
-            return NotFound();
-        }
-        return View(groupe);
-    }
-
-    // POST: Groupe/Edit/5
+    // POST: Groupe/Edit
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("CodeGroupe,NomGroupe")] Groupe groupe)
+    public async Task<IActionResult> Edit(Groupe groupe)
     {
-        if (id != groupe.CodeGroupe)
-        {
-            return NotFound();
-        }
-
         if (ModelState.IsValid)
         {
             try
             {
                 _context.Update(groupe);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Groupe updated successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GroupeExists(groupe.CodeGroupe))
+                if (!_context.Groupes.Any(e => e.CodeGroupe == groupe.CodeGroupe))
                 {
                     return NotFound();
                 }
@@ -84,40 +58,25 @@ public class GroupeController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+        TempData["ErrorMessage"] = "Error updating Groupe.";
         return View(groupe);
     }
 
-    // GET: Groupe/Delete/5
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var groupe = await _context.Groupes
-            .FirstOrDefaultAsync(m => m.CodeGroupe == id);
-        if (groupe == null)
-        {
-            return NotFound();
-        }
-
-        return View(groupe);
-    }
-
-    // POST: Groupe/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
+    // POST: Groupe/Delete
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
     {
         var groupe = await _context.Groupes.FindAsync(id);
-        _context.Groupes.Remove(groupe);
-        await _context.SaveChangesAsync();
+        if (groupe != null)
+        {
+            _context.Groupes.Remove(groupe);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Groupe deleted successfully!";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "Groupe not found.";
+        }
         return RedirectToAction(nameof(Index));
-    }
-
-    private bool GroupeExists(int id)
-    {
-        return _context.Groupes.Any(e => e.CodeGroupe == id);
     }
 }

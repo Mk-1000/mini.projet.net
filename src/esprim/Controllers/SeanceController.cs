@@ -1,93 +1,82 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace esprim.Controllers
+public class SeanceController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SeanceController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public SeanceController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public SeanceController(MyDbContext context)
+    // GET: Seance/Index
+    public async Task<IActionResult> Index()
+    {
+        var seances = await _context.Seances.ToListAsync();
+        return View(seances);
+    }
+
+    // POST: Seance/Create
+    [HttpPost]
+    public async Task<IActionResult> Create(Seance seance)
+    {
+        if (ModelState.IsValid)
         {
-            _context = context;
-        }
-
-        // GET: api/Seance
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Seance>>> GetSeances()
-        {
-            // Include the related FichesAbsenceSeances (if needed)
-            return await _context.Seances.Include(s => s.FichesAbsenceSeances).ToListAsync();
-        }
-
-        // GET: api/Seance/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Seance>> GetSeance(int id)
-        {
-            var seance = await _context.Seances
-                .Include(s => s.FichesAbsenceSeances) // Including related FichesAbsenceSeances
-                .FirstOrDefaultAsync(s => s.CodeSeance == id);
-
-            if (seance == null)
-                return NotFound();
-
-            return seance;
-        }
-
-        // POST: api/Seance
-        [HttpPost]
-        public async Task<ActionResult<Seance>> CreateSeance([FromBody] Seance seance)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            _context.Seances.Add(seance);
+            _context.Add(seance);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetSeance), new { id = seance.CodeSeance }, seance);
+            TempData["SuccessMessage"] = "Seance created successfully!";
+            return RedirectToAction(nameof(Index));
         }
+        TempData["ErrorMessage"] = "Error creating Seance.";
+        return View(seance);
+    }
 
-        // PUT: api/Seance/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSeance(int id, [FromBody] Seance seance)
+    // POST: Seance/Edit
+    [HttpPost]
+    public async Task<IActionResult> Edit(Seance seance)
+    {
+        if (ModelState.IsValid)
         {
-            if (id != seance.CodeSeance)
-                return BadRequest();
-
-            _context.Entry(seance).State = EntityState.Modified;
-
             try
             {
+                _context.Update(seance);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Seance updated successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Seances.Any(s => s.CodeSeance == id))
+                if (!_context.Seances.Any(e => e.CodeSeance == seance.CodeSeance))
+                {
                     return NotFound();
-                throw;
+                }
+                else
+                {
+                    throw;
+                }
             }
-
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
+        TempData["ErrorMessage"] = "Error updating Seance.";
+        return View(seance);
+    }
 
-        // DELETE: api/Seance/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSeance(int id)
+    // POST: Seance/Delete
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var seance = await _context.Seances.FindAsync(id);
+        if (seance != null)
         {
-            var seance = await _context.Seances.FindAsync(id);
-            if (seance == null)
-                return NotFound();
-
             _context.Seances.Remove(seance);
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            TempData["SuccessMessage"] = "Seance deleted successfully!";
         }
+        else
+        {
+            TempData["ErrorMessage"] = "Seance not found.";
+        }
+        return RedirectToAction(nameof(Index));
     }
 }

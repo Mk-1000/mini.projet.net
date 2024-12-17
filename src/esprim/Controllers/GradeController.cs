@@ -1,72 +1,82 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace esprim.Controllers
+public class GradeController : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GradeController : ControllerBase
+    private readonly MyDbContext _context;
+
+    public GradeController(MyDbContext context)
     {
-        private readonly MyDbContext _context;
+        _context = context;
+    }
 
-        public GradeController(MyDbContext context)
-        {
-            _context = context;
-        }
+    // GET: Grade/Index
+    public async Task<IActionResult> Index()
+    {
+        var grades = await _context.Grades.ToListAsync();
+        return View(grades);
+    }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Grade>>> GetGrades()
+    // POST: Grade/Create
+    [HttpPost]
+    public async Task<IActionResult> Create(Grade grade)
+    {
+        if (ModelState.IsValid)
         {
-            return await _context.Grades.ToListAsync();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Grade>> GetGrade(int id)
-        {
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade == null) return NotFound();
-            return grade;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Grade>> CreateGrade([FromBody] Grade grade)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            _context.Grades.Add(grade);
+            _context.Add(grade);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetGrade), new { id = grade.CodeGrade }, grade);
+            TempData["SuccessMessage"] = "Grade created successfully!";
+            return RedirectToAction(nameof(Index));
         }
+        TempData["ErrorMessage"] = "Error creating Grade.";
+        return View(grade);
+    }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGrade(int id, [FromBody] Grade grade)
+    // POST: Grade/Edit
+    [HttpPost]
+    public async Task<IActionResult> Edit(Grade grade)
+    {
+        if (ModelState.IsValid)
         {
-            if (id != grade.CodeGrade) return BadRequest();
-            _context.Entry(grade).State = EntityState.Modified;
             try
             {
+                _context.Update(grade);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Grade updated successfully!";
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Grades.Any(g => g.CodeGrade == id)) return NotFound();
-                throw;
+                if (!_context.Grades.Any(e => e.CodeGrade == grade.CodeGrade))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
-            return NoContent();
+            return RedirectToAction(nameof(Index));
         }
+        TempData["ErrorMessage"] = "Error updating Grade.";
+        return View(grade);
+    }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGrade(int id)
+    // POST: Grade/Delete
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var grade = await _context.Grades.FindAsync(id);
+        if (grade != null)
         {
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade == null) return NotFound();
-
             _context.Grades.Remove(grade);
             await _context.SaveChangesAsync();
-            return NoContent();
+            TempData["SuccessMessage"] = "Grade deleted successfully!";
         }
+        else
+        {
+            TempData["ErrorMessage"] = "Grade not found.";
+        }
+        return RedirectToAction(nameof(Index));
     }
 }

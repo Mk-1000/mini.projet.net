@@ -1,7 +1,7 @@
-﻿@model IEnumerable<mini.project.Models.Groupe>
+﻿@model IEnumerable<mini.project.Models.Grade>
 
 @{
-    ViewData["Title"] = "Groupe Management";
+    ViewData["Title"] = "Grade Management";
 }
 
 <div class="container-fluid py-4">
@@ -10,10 +10,10 @@
             <div class="card">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">
-                        <i class="fas fa-users me-2"></i>Groupe Management
+                        <i class="fas fa-cogs me-2"></i>Grade Management
                     </h3>
-                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addGroupeModal">
-                        <i class="fas fa-plus me-2"></i>Add New Groupe
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addGradeModal">
+                        <i class="fas fa-plus me-2"></i>Add New Grade
                     </button>
                 </div>
                 <div class="card-body">
@@ -21,27 +21,27 @@
                         <table class="table table-striped table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Code Groupe</th>
-                                    <th>Nom Groupe</th>
+                                    <th>Code Grade</th>
+                                    <th>Nom Grade</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var groupe in Model)
+                                @foreach (var grade in Model)
                                 {
                                     <tr>
-                                        <td>@groupe.CodeGroupe</td>
-                                        <td>@groupe.NomGroupe</td>
+                                        <td>@grade.CodeGrade</td>
+                                        <td>@grade.NomGrade</td>
                                         <td>
                                             <button class="btn btn-warning btn-sm btn-action"
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#editModal-@groupe.CodeGroupe">
+                                                    data-bs-target="#editModal-@grade.CodeGrade">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <form action="@Url.Action("Delete", "Groupe", new { id = groupe.CodeGroupe })"
+                                            <form action="@Url.Action("Delete", "Grade", new { id = grade.CodeGrade })"
                                                   method="post"
                                                   class="d-inline"
-                                                  onsubmit="return confirm('Are you sure you want to delete this Groupe?');">
+                                                  onsubmit="return confirm('Are you sure you want to delete this Grade?');">
                                                 <button type="submit" class="btn btn-danger btn-sm btn-action">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -50,21 +50,21 @@
                                     </tr>
 
                                     <!-- Edit Modal -->
-                                    <div class="modal fade" id="editModal-@groupe.CodeGroupe" tabindex="-1">
+                                    <div class="modal fade" id="editModal-@grade.CodeGrade" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header bg-warning">
-                                                    <h5 class="modal-title">Edit Groupe</h5>
+                                                    <h5 class="modal-title">Edit Grade</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <form asp-action="Edit" method="post">
                                                     <div class="modal-body">
-                                                        <input type="hidden" name="CodeGroupe" value="@groupe.CodeGroupe" />
+                                                        <input type="hidden" name="CodeGrade" value="@grade.CodeGrade" />
                                                         <div class="row">
                                                             <div class="col-md-6 mb-3">
-                                                                <label class="form-label">Nom Groupe</label>
-                                                                <input type="text" class="form-control" name="NomGroupe"
-                                                                       value="@groupe.NomGroupe" required />
+                                                                <label class="form-label">Nom Grade</label>
+                                                                <input type="text" class="form-control" name="NomGrade"
+                                                                       value="@grade.NomGrade" required />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -89,20 +89,20 @@
         </div>
     </div>
 
-    <!-- Add Groupe Modal -->
-    <div class="modal fade" id="addGroupeModal" tabindex="-1">
+    <!-- Add Grade Modal -->
+    <div class="modal fade" id="addGradeModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Add New Groupe</h5>
+                    <h5 class="modal-title">Add New Grade</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form asp-action="Create" method="post">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nom Groupe</label>
-                                <input type="text" class="form-control" name="NomGroupe" required />
+                                <label class="form-label">Nom Grade</label>
+                                <input type="text" class="form-control" name="NomGrade" required />
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                             Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            Create Groupe
+                            Create Grade
                         </button>
                     </div>
                 </form>

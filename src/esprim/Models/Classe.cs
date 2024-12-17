@@ -21,9 +21,9 @@ namespace mini.project.Models
         public Groupe? Groupe { get; set; }
         public Departement? Departement { get; set; }
 
-        public ICollection<Etudiant> Etudiants { get; set; } = new List<Etudiant>(); // Default empty list
+        public ICollection<Etudiant> Etudiants { get; set; } = new List<Etudiant>();
 
-        public ICollection<FicheAbsence> FichesAbsence { get; set; } = new List<FicheAbsence>(); // Default empty list
+        public ICollection<FicheAbsence> FichesAbsence { get; set; } = new List<FicheAbsence>();
 
     }
 }
