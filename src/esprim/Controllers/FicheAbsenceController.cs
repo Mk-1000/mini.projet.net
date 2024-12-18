@@ -101,6 +101,16 @@ public class FicheAbsenceController : Controller
             return RedirectToAction(nameof(Index));
         }
 
+        var ficheAbsenceSeance = await _context.FichesAbsenceSeances
+        .FirstOrDefaultAsync(fas => fas.CodeFicheAbsenceSeance == CodeFicheAbsenceSeance);
+
+        if (ficheAbsenceSeance == null)
+        {
+            TempData["ErrorMessage"] = "The session does not exist.";
+            return RedirectToAction(nameof(Index));
+        }
+
+
         try
         {
             foreach (var codeEtudiant in CodeEtudiants)
