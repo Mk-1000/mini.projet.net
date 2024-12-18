@@ -20,5 +20,7 @@ namespace mini.project.Models
         public int? CodeClasse { get; set; }
 
         public Classe? Classe { get; set; }
+        public ICollection<LigneFicheAbsence> LignesFicheAbsence { get; set; } = new List<LigneFicheAbsence>();
+
     }
 }

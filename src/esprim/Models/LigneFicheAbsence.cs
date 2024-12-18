@@ -7,14 +7,16 @@ namespace mini.project.Models
     {
         [Key]
         public int CodeLigneFicheAbsence { get; set; }
+
         [ForeignKey("Etudiant")]
         public int CodeEtudiant { get; set; }
-        [ForeignKey("FicheAbsence")]
-        public int CodeFicheAbsence { get; set; }
+
+        [ForeignKey("FicheAbsenceSeance")]
+        public int CodeFicheAbsenceSeance { get; set; }
 
         public bool IsAbsent { get; set; }
 
         public Etudiant? Etudiant { get; set; }
-        public FicheAbsence? FicheAbsence { get; set; }
+        public FicheAbsenceSeance? FicheAbsenceSeance { get; set; }
     }
 }

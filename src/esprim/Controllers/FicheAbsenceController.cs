@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mini.project.Models;
 
@@ -16,14 +16,22 @@ public class FicheAbsenceController : Controller
     public async Task<IActionResult> Index()
     {
         var fichesAbsence = await _context.FichesAbsence
-                                    .Include(f => f.Matiere)
-                                    .Include(f => f.Enseignant)
-                                    .Include(f => f.Classe)
-                                    .ToListAsync();
+            .AsNoTracking()
+            .Include(f => f.Matiere)
+            .Include(f => f.Enseignant)
+            .Include(f => f.Classe)
+            .Include(f => f.FichesAbsenceSeances)
+                .ThenInclude(fs => fs.Seance)
+            .Include(f => f.FichesAbsenceSeances)
+                .ThenInclude(fs => fs.LignesFicheAbsence)
+                    .ThenInclude(lfa => lfa.Etudiant)
+            .ToListAsync();
 
-        ViewData["MatiereList"] = new SelectList(_context.Matieres, "CodeMatiere", "NomMatiere");
-        ViewData["EnseignantList"] = new SelectList(_context.Enseignants, "CodeEnseignant", "Nom");
-        ViewData["ClasseList"] = new SelectList(_context.Classes, "CodeClasse", "NomClasse");
+        ViewData["MatiereList"] = new SelectList(await _context.Matieres.ToListAsync(), "CodeMatiere", "NomMatiere");
+        ViewData["EnseignantList"] = new SelectList(await _context.Enseignants.ToListAsync(), "CodeEnseignant", "Nom");
+        ViewData["ClasseList"] = new SelectList(await _context.Classes.ToListAsync(), "CodeClasse", "NomClasse");
+        ViewData["SeanceList"] = new SelectList(await _context.Seances.ToListAsync(), "CodeSeance", "NomSeance");
+        ViewData["StudentList"] = new SelectList(await _context.Etudiants.ToListAsync(), "CodeEtudiant", "Nom");
 
         return View(fichesAbsence);
     }
@@ -34,34 +42,87 @@ public class FicheAbsenceController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.Add(ficheAbsence);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "FicheAbsence created successfully!";
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.Add(ficheAbsence);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "FicheAbsence created successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                TempData["ErrorMessage"] = $"Error creating FicheAbsence: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
         }
-
-        TempData["ErrorMessage"] = "Error creating FicheAbsence.";
+        TempData["ErrorMessage"] = "Invalid data. Please try again.";
         return RedirectToAction(nameof(Index));
     }
 
-    // POST: FicheAbsence/Edit
+    // POST: FicheAbsence/AddSeance
     [HttpPost]
-    public async Task<IActionResult> Edit(FicheAbsence ficheAbsence)
+    public async Task<IActionResult> AddSeance(int CodeFicheAbsence, int CodeSeance)
     {
-        if (ModelState.IsValid)
+        try
         {
-            try
+            var ficheAbsence = await _context.FichesAbsence.FindAsync(CodeFicheAbsence);
+            if (ficheAbsence == null)
             {
-                _context.Update(ficheAbsence);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "FicheAbsence updated successfully!";
+                TempData["ErrorMessage"] = "FicheAbsence not found.";
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
+
+            var ficheAbsenceSeance = new FicheAbsenceSeance
             {
-                TempData["ErrorMessage"] = "Error updating FicheAbsence.";
-            }
+                CodeFicheAbsence = CodeFicheAbsence,
+                CodeSeance = CodeSeance
+            };
+
+            _context.FichesAbsenceSeances.Add(ficheAbsenceSeance);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Seance added successfully!";
             return RedirectToAction(nameof(Index));
         }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"Error adding Seance: {ex.Message}";
+            return RedirectToAction(nameof(Index));
+        }
+    }
+
+    // POST: FicheAbsence/AssignStudents
+    [HttpPost]
+    public async Task<IActionResult> AssignStudents(int CodeFicheAbsenceSeance, List<int> CodeEtudiants)
+    {
+        if (CodeEtudiants == null || CodeEtudiants.Count == 0)
+        {
+            TempData["ErrorMessage"] = "No students selected.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        try
+        {
+            foreach (var codeEtudiant in CodeEtudiants)
+            {
+                var ligneFicheAbsence = new LigneFicheAbsence
+                {
+                    CodeFicheAbsenceSeance = CodeFicheAbsenceSeance,
+                    CodeEtudiant = codeEtudiant,
+                    IsAbsent = true // Mark as absent
+                };
+
+                _context.LignesFicheAbsence.Add(ligneFicheAbsence);
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Students marked as absent successfully!";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"Error assigning students: {ex.Message}";
+        }
+
         return RedirectToAction(nameof(Index));
     }
 
@@ -69,17 +130,24 @@ public class FicheAbsenceController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        var ficheAbsence = await _context.FichesAbsence.FindAsync(id);
-        if (ficheAbsence != null)
+        try
         {
+            var ficheAbsence = await _context.FichesAbsence.FindAsync(id);
+            if (ficheAbsence == null)
+            {
+                TempData["ErrorMessage"] = "FicheAbsence not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
             _context.FichesAbsence.Remove(ficheAbsence);
             await _context.SaveChangesAsync();
             TempData["SuccessMessage"] = "FicheAbsence deleted successfully!";
         }
-        else
+        catch (DbUpdateException ex)
         {
-            TempData["ErrorMessage"] = "FicheAbsence not found.";
+            TempData["ErrorMessage"] = $"Error deleting FicheAbsence: {ex.Message}";
         }
+
         return RedirectToAction(nameof(Index));
     }
 }

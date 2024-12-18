@@ -21,11 +21,20 @@ namespace mini.project.Models
 
         // OnModelCreating configuration
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        { 
+        {
             // Primary Key configurations
             modelBuilder.Entity<Classe>().HasKey(c => c.CodeClasse);
             modelBuilder.Entity<Groupe>().HasKey(g => g.CodeGroupe);
             modelBuilder.Entity<Departement>().HasKey(d => d.CodeDepartement);
+            modelBuilder.Entity<Matiere>().HasKey(m => m.CodeMatiere);
+            modelBuilder.Entity<Grade>().HasKey(g => g.CodeGrade);
+
+            // Composite Key configurations
+            modelBuilder.Entity<FicheAbsenceSeance>()
+                .HasKey(fas => fas.CodeFicheAbsenceSeance);
+
+            modelBuilder.Entity<LigneFicheAbsence>()
+                .HasKey(lfa => lfa.CodeLigneFicheAbsence);
 
             // Relationships and Foreign Key configurations
             modelBuilder.Entity<Classe>()
@@ -40,28 +49,32 @@ namespace mini.project.Models
                 .HasForeignKey(c => c.CodeDepartement)
                 .OnDelete(DeleteBehavior.SetNull);  // Cascade or SetNull based on your business rules
 
-            // Other relationships can be configured here as needed
             modelBuilder.Entity<Enseignant>()
                 .HasOne(e => e.Departement)
                 .WithMany(d => d.Enseignants)
                 .HasForeignKey(e => e.CodeDepartement);
 
-            // Define other foreign key constraints for your models as well
+            modelBuilder.Entity<FicheAbsence>()
+                .HasMany(fa => fa.FichesAbsenceSeances)
+                .WithOne(fas => fas.FicheAbsence)
+                .HasForeignKey(fas => fas.CodeFicheAbsence);
+
             modelBuilder.Entity<FicheAbsenceSeance>()
-                .HasKey(f => new { f.CodeFicheAbsence, f.CodeSeance });
+                .HasMany(fas => fas.LignesFicheAbsence)
+                .WithOne(lfa => lfa.FicheAbsenceSeance)
+                .HasForeignKey(lfa => lfa.CodeFicheAbsenceSeance);
+
+            modelBuilder.Entity<FicheAbsenceSeance>()
+                .HasOne(fas => fas.Seance)
+                .WithMany(s => s.FichesAbsenceSeances)
+                .HasForeignKey(fas => fas.CodeSeance);
 
             modelBuilder.Entity<LigneFicheAbsence>()
-                .HasKey(l => new { l.CodeFicheAbsence, l.CodeEtudiant });
+                .HasOne(lfa => lfa.Etudiant)
+                .WithMany(e => e.LignesFicheAbsence)
+                .HasForeignKey(lfa => lfa.CodeEtudiant);
 
-            modelBuilder.Entity<Matiere>()
-                .HasKey(m => m.CodeMatiere);
-
-            modelBuilder.Entity<Groupe>()
-                .HasKey(g => g.CodeGroupe);
-
-            modelBuilder.Entity<Grade>()
-                .HasKey(g => g.CodeGrade);
+            // Configure other foreign key constraints as needed
         }
-
     }
 }
