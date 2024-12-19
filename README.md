@@ -61,4 +61,4 @@ To get started with this project locally, follow these steps:
 
 6. ## Demo
 
-![Demo GIF](assets/images/demo.gif)
+![Demo GIF](assets/demo.gif)
