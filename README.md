@@ -59,44 +59,6 @@ To get started with this project locally, follow these steps:
 
    Open your browser and navigate to `http://localhost:5000` to access the application.
 
-## Database Setup
+6. ## Demo
 
-The project uses **Entity Framework Core** for database management. The entities are defined in `Models` and are linked using foreign key relationships. Run the migrations to generate the necessary tables in your database.
-
-## Entities
-
-The main entities in the project are:
-
-1. **Classe**: Represents a class or course, related to a `Groupe` and `Departement`.
-2. **Departement**: Represents a department, which can have multiple classes (`Classe`) and instructors (`Enseignant`).
-3. **Enseignant**: Represents an instructor, belonging to a department.
-4. **Etudiant**: Represents a student, who is enrolled in a class.
-5. **FicheAbsence**: Represents an attendance record for a class.
-6. **Matiere**: Represents a subject or topic within a class.
-
-## Project Structure
-
-Here's an overview of the project structure:
-
-```
-src
-├── esprim
-│   ├── bin               # Compiled binaries
-│   ├── Controllers       # Controller classes for handling HTTP requests
-│   ├── Migrations        # Database migrations
-│   ├── Models            # Entity models (Classe, Departement, etc.)
-│   ├── obj               # Temporary object files
-│   ├── Properties        # Project properties
-│   ├── Views             # Views for MVC
-│   └── wwwroot           # Static files (CSS, JS, Bootstrap, etc.)
-```
-
-### Key Directories and Files:
-- `Controllers/`: Contains controller classes like `ClasseController`, `DepartementController`, etc.
-- `Models/`: Contains model classes such as `Classe`, `Departement`, `Etudiant`, and `Enseignant`.
-- `Views/`: Contains Razor views for different entities (`Classe`, `Departement`, etc.).
-- `wwwroot/`: Static files like CSS, JavaScript, and Bootstrap assets.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+![Demo GIF](assets/images/demo.gif)
